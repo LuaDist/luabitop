@@ -18,7 +18,7 @@ end
 
 local function check_unop(name, r)
   local f = bit[name]
-  local s = 0;
+  local s = ""
   if pcall(f) or pcall(f, "z") or pcall(f, true) then
     error("bit."..name.." fails to detect argument errors", 0)
   end
@@ -28,7 +28,7 @@ end
 
 local function check_binop(name, r)
   local f = bit[name]
-  local s = 0;
+  local s = ""
   if pcall(f) or pcall(f, "z") or pcall(f, true) then
     error("bit."..name.." fails to detect argument errors", 0)
   end
@@ -38,16 +38,20 @@ local function check_binop(name, r)
   cksum(name, s, r)
 end
 
-local function check_shift(name, r)
+local function check_binop_range(name, r, yb, ye)
   local f = bit[name]
-  local s = 0;
-  if pcall(f) or pcall(f, "z") or pcall(f, true) or pcall(f, 1) then
+  local s = ""
+  if pcall(f) or pcall(f, "z") or pcall(f, true) or pcall(f, 1, true) then
     error("bit."..name.." fails to detect argument errors", 0)
   end
   for _,x in ipairs(vb) do
-    for y=0,31 do s = s..","..tostring(f(x, y)) end
+    for y=yb,ye do s = s..","..tostring(f(x, y)) end
   end
   cksum(name, s, r)
+end
+
+local function check_shift(name, r)
+  check_binop_range(name, r, 0, 31)
 end
 
 -- Minimal sanity checks.
@@ -63,29 +67,19 @@ assert(bit.bxor(1,2) == 3)
 assert(bit.bor(1,2,4,8,16,32,64,128) == 255)
 
 -- Apply operations to test vectors and compare checksums.
-check_unop("tobit", 282601)
-check_unop("bnot", 293242)
-check_unop("bswap", 313216)
+check_unop("tobit", 277312)
+check_unop("bnot", 287870)
+check_unop("bswap", 307611)
 
-check_binop("band", 41271123)
-check_binop("bor", 51325358)
-check_binop("bxor", 79412059)
+check_binop("band", 41206764)
+check_binop("bor", 51253663)
+check_binop("bxor", 79322427)
 
-check_shift("lshift", 325441968)
-check_shift("rshift", 139179769)
-check_shift("arshift", 111469290)
-check_shift("rol", 302576086)
-check_shift("ror", 302491692)
+check_shift("lshift", 325260344)
+check_shift("rshift", 139061800)
+check_shift("arshift", 111364720)
+check_shift("rol", 302401155)
+check_shift("ror", 302316761)
 
--- Do this last, since quite a few Lua installations fail.
--- Note: this is not BitOp's fault, check the casts for case 'x' in
---       str_format() in src/lstrlib.c.
-local s = string.format("%08x", 1)
-assert(s == "00000001", "broken string.format(\"%08x\", 1)")
-s = string.format("%x", 0x7fffffff)
-assert(s == "7fffffff", "broken string.format(\"%x\", 0x7fffffff)")
-s = string.format("%x", -1)
-assert(s == "ffffffff" or s == "ffffffffffffffff", "broken string.format(\"%x\", -1)")
-s = string.format("%x", 0xffffffff)
-assert(s == "ffffffff" or s == "ffffffffffffffff", "broken string.format(\"%x\", 0xffffffff)")
+check_binop_range("tohex", 47880306, -8, 8)
 

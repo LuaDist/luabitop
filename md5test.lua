@@ -1,7 +1,7 @@
 -- MD5 test and benchmark. Public domain.
 
 local bit = require("bit")
-local tobit, bnot = bit.tobit or bit.cast, bit.bnot
+local tobit, tohex, bnot = bit.tobit or bit.cast, bit.tohex, bit.bnot
 local bor, band, bxor = bit.bor, bit.band, bit.bxor
 local lshift, rshift, rol, bswap = bit.lshift, bit.rshift, bit.rol, bit.bswap
 local byte, char, sub, rep = string.byte, string.char, string.sub, string.rep
@@ -16,6 +16,12 @@ if not bswap then -- Replacement function if bswap is missing.
   function bswap(a)
     return bor(shr(a, 24), band(shr(a, 8), 0xff00),
 	       shl(band(a, 0xff00), 8), shl(a, 24));
+  end
+end
+
+if not tohex then -- (Unreliable) replacement function if tohex is missing.
+  function tohex(a)
+    return string.sub(string.format("%08x", a), -8)
   end
 end
 
@@ -109,10 +115,6 @@ local function transform(x, a1, b1, c1, d1)
   return tobit(a+a1), tobit(b+b1), tobit(c+c1), tobit(d+d1)
 end
 
-local function lehex(x)
-  return string.sub(string.format("%08x", bswap(x)), -8)
-end
-
 -- Note: this is copying the original string and NOT particularly fast.
 -- A library for struct unpacking would make this task much easier.
 local function md5(msg)
@@ -133,7 +135,7 @@ local function md5(msg)
       k = k + 1
     end
   end
-  return lehex(a)..lehex(b)..lehex(c)..lehex(d)
+  return tohex(bswap(a))..tohex(bswap(b))..tohex(bswap(c))..tohex(bswap(d))
 end
 
 assert(md5('') == 'd41d8cd98f00b204e9800998ecf8427e')

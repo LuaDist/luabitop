@@ -7,13 +7,13 @@
 LUA= lua
 
 # Include path where lua.h, luaconf.h and lauxlib.h reside:
-INCLUDES= "-IC:\Program Files\misc"
+INCLUDES= "-I.."
 
 # Path of lua51.dll:
-LUADLLPATH= "C:\Program Files\misc\lua51.dll"
+LUADLLPATH= "..\lua51.dll"
 
 # Path where C modules for Lua should be installed:
-LUACMODPATH= "C:\Program Files\misc"
+LUACMODPATH= ".."
 
 CC= gcc
 SOCC= $(CC) -shared $(LUADLLPATH)

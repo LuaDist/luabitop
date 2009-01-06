@@ -4,7 +4,7 @@
 <title>API Functions</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <meta name="Author" content="Mike Pall">
-<meta name="Copyright" content="Copyright (C) 2005-2008, Mike Pall">
+<meta name="Copyright" content="Copyright (C) 2005-2009, Mike Pall">
 <meta name="Language" content="en">
 <link rel="stylesheet" type="text/css" href="bluequad.css" media="screen">
 <link rel="stylesheet" type="text/css" href="bluequad-print.css" media="print">
@@ -90,7 +90,7 @@ by Lua so you can cut &amp; paste the whole line to a Lua prompt
 and experiment with it.
 </p>
 <p>
-Note that all bit operation return <em>signed</em> 32&nbsp;bit numbers
+Note that all bit operations return <em>signed</em> 32&nbsp;bit numbers
 (<a href="semantics.html#range">rationale</a>). And these print
 as signed decimal numbers by default.
 </p>
@@ -101,7 +101,7 @@ For clarity the examples assume the definition of a helper function
 </p>
 <pre class="code">
 function printx(x)
-  print("0x"..string.sub(string.format("%08x", x), -8))
+  print("0x"..bit.tohex(x))
 end
 </pre>
 
@@ -125,6 +125,23 @@ print(bit.tobit(2^40 + 1234))    --> 1234
 for an explanation why the printed numbers in the first two lines
 differ (if your Lua installation uses a <tt>double</tt> number type).
 </p>
+
+<h3 id="tohex"><tt>y = bit.tohex(x [,n])</tt></h3>
+<p>
+Converts its first argument to a hex string. The number of hex digits is
+given by the absolute value of the optional second argument. Positive
+numbers between 1 and 8 generate lowercase hex digits. Negative numbers
+generate uppercase hex digits. Only the least-significant 4*|n| bits are
+used. The default is to generate 8 lowercase hex digits.
+</p>
+<pre class="code">
+print(bit.tohex(1))              --> 00000001
+print(bit.tohex(-1))             --> ffffffff
+print(bit.tohex(0xffffffff))     --> ffffffff
+print(bit.tohex(-1, -8))         --> FFFFFFFF
+print(bit.tohex(0x21, 4))        --> 0021
+print(bit.tohex(0x87654321, 4))  --> 4321
+</pre>
 
 <h3 id="bnot"><tt>y = bit.bnot(x)</tt></h3>
 <p>
@@ -258,7 +275,13 @@ signed and unsigned types. But as long as you treat the results of
 bitwise operations uniformly everywhere, this shouldn't cause any problems.
 </p>
 <p>
-Always format results as strings with "%x" or "%u", but not with "%d".
+Preferrably format results with <tt>bit.tohex</tt> if you want a
+reliable unsigned string representation. Avoid the <tt>"%x"</tt> or
+<tt>"%u"</tt> formats for <tt>string.format</tt>. They fail on some
+architectures for negative numbers and can return more than 8 hex digits
+on others.
+</p>
+<p>
 You may also want to avoid the default number to string coercion,
 since this is a signed conversion.
 The coercion is used for string concatenation and all standard library
@@ -304,7 +327,7 @@ Some simple solutions:
 </div>
 <div id="foot">
 <hr class="hide">
-Copyright &copy; 2008 Mike Pall
+Copyright &copy; 2009 Mike Pall
 <span class="noprint">
 &middot;
 <a href="contact.html">Contact</a>

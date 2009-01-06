@@ -4,7 +4,7 @@
 <title>Installation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <meta name="Author" content="Mike Pall">
-<meta name="Copyright" content="Copyright (C) 2005-2008, Mike Pall">
+<meta name="Copyright" content="Copyright (C) 2005-2009, Mike Pall">
 <meta name="Language" content="en">
 <link rel="stylesheet" type="text/css" href="bluequad.css" media="screen">
 <link rel="stylesheet" type="text/css" href="bluequad-print.css" media="print">
@@ -194,12 +194,11 @@ if you've installed multiple Lua interpreters (e.g. both in <tt>/usr/bin</tt>
 and in <tt>/usr/local/bin</tt>).
 </p>
 <p>
-If you get a failure about a broken <tt>tostring()</tt> or
-<tt>string.format()</tt> function or about broken hex literals,
-then your Lua installation is defective. Check with your distributor,
-replace/upgrade a broken compiler or C library or re-install Lua
-yourself with the right configuration settings (in particular see
-<tt>LUA_NUMBER_*</tt>, <tt>luai_num*</tt> and <tt>LUA_USELONGLONG</tt>
+If you get a warning or a failure about a broken <tt>tostring()</tt> function
+or about broken hex literals, then your Lua installation is defective.
+Check with your distributor, replace/upgrade a broken compiler or C library
+or re-install Lua yourself with the right configuration settings
+(in particular see <tt>LUA_NUMBER_*</tt> and <tt>luai_num*</tt>
 in <tt>luaconf.h</tt>).
 </p>
 <h2 id="bench">Benchmarks</h2>
@@ -229,7 +228,7 @@ against fully optimized MD5 implementations.</li>
 </div>
 <div id="foot">
 <hr class="hide">
-Copyright &copy; 2008 Mike Pall
+Copyright &copy; 2009 Mike Pall
 <span class="noprint">
 &middot;
 <a href="contact.html">Contact</a>

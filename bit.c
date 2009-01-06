@@ -2,7 +2,7 @@
 ** Lua BitOp -- a bit operations library for Lua 5.1.
 ** http://bitop.luajit.org/
 **
-** Copyright (C) 2008 Mike Pall. All rights reserved.
+** Copyright (C) 2008-2009 Mike Pall. All rights reserved.
 **
 ** Permission is hereby granted, free of charge, to any person obtaining
 ** a copy of this software and associated documentation files (the
@@ -26,8 +26,9 @@
 ** [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 */
 
-#define LUA_BITOP_VERSION	"1.0.0"
+#define LUA_BITOP_VERSION	"1.0.1"
 
+#define LUA_LIB
 #include "lua.h"
 #include "lauxlib.h"
 
@@ -116,6 +117,20 @@ static int bit_bswap(lua_State *L)
   BRET(b)
 }
 
+static int bit_tohex(lua_State *L)
+{
+  UBits b = barg(L, 1);
+  SBits n = lua_isnone(L, 2) ? 8 : (SBits)barg(L, 2);
+  const char *hexdigits = "0123456789abcdef";
+  char buf[8];
+  int i;
+  if (n < 0) { n = -n; hexdigits = "0123456789ABCDEF"; }
+  if (n > 8) n = 8;
+  for (i = (int)n; --i >= 0; ) { buf[i] = hexdigits[b & 15]; b >>= 4; }
+  lua_pushlstring(L, buf, (size_t)n);
+  return 1;
+}
+
 static const struct luaL_Reg bit_funcs[] = {
   { "tobit",	bit_tobit },
   { "bnot",	bit_bnot },
@@ -128,22 +143,33 @@ static const struct luaL_Reg bit_funcs[] = {
   { "rol",	bit_rol },
   { "ror",	bit_ror },
   { "bswap",	bit_bswap },
+  { "tohex",	bit_tohex },
   { NULL, NULL }
 };
+
+/* Signed right-shifts are implementation-defined per C89/C99.
+** But the de facto standard are arithmetic right-shifts on two's
+** complement CPUs. This behaviour is required here, so test for it.
+*/
+#define BAD_SAR		(bsar(-8, 2) != (SBits)-2)
 
 LUALIB_API int luaopen_bit(lua_State *L)
 {
   UBits b;
   lua_pushnumber(L, (lua_Number)1437217655L);
   b = barg(L, -1);
-  if (b != (UBits)1437217655L) {  /* Perform a simple self-test. */
+  if (b != (UBits)1437217655L || BAD_SAR) {  /* Perform a simple self-test. */
     const char *msg = "compiled with incompatible luaconf.h";
 #ifdef LUA_NUMBER_DOUBLE
+#ifdef _WIN32
     if (b == (UBits)1610612736L)
       msg = "use D3DCREATE_FPU_PRESERVE with DirectX";
+#endif
     if (b == (UBits)1127743488L)
       msg = "not compiled with SWAPPED_DOUBLE";
 #endif
+    if (BAD_SAR)
+      msg = "arithmetic right-shift broken";
     luaL_error(L, "bit library self-test failed (%s)", msg);
   }
   luaL_register(L, "bit", bit_funcs);
