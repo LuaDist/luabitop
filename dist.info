@@ -1,0 +1,14 @@
+--- This dist file is part of LuaDist project
+
+name="luabitop"
+version="1.0.1"
+
+desc = "Lua Bit Operations Module by Mile Pall"
+author = "Mike Pall"
+url = "http://bitop.luajit.org/"
+license = "MIT/X license"
+maintainer = "Peter Drahoš"
+
+depends = {
+	"lua ~> 5.1"
+}
