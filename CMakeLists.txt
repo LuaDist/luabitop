@@ -1,21 +1,21 @@
-# Copyright (C) 2007-2009 LuaDist.
+# Copyright (C) 2007-2012 LuaDist.
 # Created by Peter Drahoš
 # Redistribution and use of this file is allowed according to the terms of the MIT license.
 # For details see the COPYRIGHT file distributed with LuaDist.
 # Please note that the package source code is licensed under its own license.
 
-PROJECT(luabitop C)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-INCLUDE(dist.cmake)
+project(luabitop C)
+cmake_minimum_required(VERSION 2.6)
+include(cmake/dist.cmake)
+include(cmake/lua.cmake)
 
-ADD_LUA_MODULE(bit bit.c bit.def)
+install_lua_module(bit bit.c bit.def)
 
-ADD_LUA_TEST(bittest.lua)
-ADD_LUA_TEST(nsievebits.lua)
-ADD_LUA_TEST(md5test.lua)
+add_lua_test(bittest.lua)
+add_lua_test(nsievebits.lua)
+add_lua_test(md5test.lua)
 
-INSTALL (TARGETS bit DESTINATION ${INSTALL_CMOD})
-INSTALL (DIRECTORY doc/ DESTINATION ${INSTALL_DOC})
-INSTALL (FILES README DESTINATION ${INSTALL_DATA})
-INSTALL (FILES bitbench.lua nsievebits.lua md5test.lua DESTINATION ${INSTALL_FOO})
-INSTALL (FILES bittest.lua DESTINATION ${INSTALL_TEST})
+install_doc(doc/)
+install_data(README)
+install_foo(bitbench.lua nsievebits.lua md5test.lua)
+install_test(bittest.lua)
