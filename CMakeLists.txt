@@ -7,7 +7,7 @@
 project(luabitop C)
 cmake_minimum_required(VERSION 2.6)
 include(cmake/dist.cmake)
-include(cmake/lua.cmake)
+include(lua)
 
 install_lua_module(bit bit.c bit.def)
 
