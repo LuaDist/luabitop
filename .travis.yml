@@ -19,18 +19,12 @@ matrix:
 
 # We need CMake and LuaDist
 install:
-  - export MODULE=`basename $PWD`
-  - sudo apt-get install cmake >/dev/null 2>&1
-  - git clone git://github.com/LuaDist/bootstrap.git _luadist >/dev/null 2>&1
-  - cd _luadist
-  - git submodule update --init >/dev/null 2>&1
-  - ./bootstrap >/dev/null 2>&1
-  - export LUADIST=$PWD/_install/bin/luadist
-  - cd $HOME
+  - git clone git://github.com/LuaDist/_util.git ~/_util
+  - . ~/_util/travis install-luadist
 
 # Use LuaDist to deploy the module
 script:
-  - $LUADIST _test install $LUA $MODULE-scm $CMAKE -verbose=true -test=true
+  - . ~/_util/travis script-luadist
 
 # Execute additional tests or commands
 #after_script:
@@ -48,3 +42,4 @@ notifications:
   email:
     on_success: change
     on_failure: always
+  
