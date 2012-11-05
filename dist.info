@@ -1,7 +1,7 @@
 --- This dist file is part of LuaDist project
 
 name="luabitop"
-version="1.0.1"
+version="1.0.2"
 
 desc = "Lua Bit Operations Module by Mile Pall"
 author = "Mike Pall"
@@ -10,5 +10,5 @@ license = "MIT/X license"
 maintainer = "Peter Drahoš"
 
 depends = {
-	"lua ~> 5.1"
+	"lua >= 5.1"
 }
