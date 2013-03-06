@@ -1,0 +1,46 @@
+type = "x86"
+arch = "Windows"
+author = "Mike Pall"
+depends = {
+[[lua >= 5.1]],
+}
+
+desc = "Lua Bit Operations Module by Mile Pall"
+version = "1.0.2"
+maintainer = "Peter Drahoš"
+files = {
+Runtime = {
+[[lib\lua\bit.dll]],
+}
+,
+Test = {
+[[share\luabitop\test\bittest.lua]],
+}
+,
+Documentation = {
+[[share\luabitop\doc\\api.html]],
+[[share\luabitop\doc\\bluequad-print.css]],
+[[share\luabitop\doc\\bluequad.css]],
+[[share\luabitop\doc\\changes.html]],
+[[share\luabitop\doc\\contact.html]],
+[[share\luabitop\doc\\img\contact.png]],
+[[share\luabitop\doc\\index.html]],
+[[share\luabitop\doc\\install.html]],
+[[share\luabitop\doc\\semantics.html]],
+}
+,
+Data = {
+[[share\luabitop\README]],
+}
+,
+Other = {
+[[share\luabitop\etc\bitbench.lua]],
+[[share\luabitop\etc\nsievebits.lua]],
+[[share\luabitop\etc\md5test.lua]],
+}
+,
+}
+
+url = "http://bitop.luajit.org/"
+name = "luabitop"
+license = "MIT/X license"
